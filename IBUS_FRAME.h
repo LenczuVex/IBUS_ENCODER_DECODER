@@ -2,6 +2,9 @@
 #ifndef IBUS_FRAME_H  
 #define IBUS_FRAME_H  
 
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 #include <stdint.h>
 #include <stdio.h>
