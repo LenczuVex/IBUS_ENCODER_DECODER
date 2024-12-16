@@ -1,6 +1,6 @@
 //IBUS_FRAME.h
-#ifndef IBUS_FRAME_H  // Check if IBUS_FRAME_H has been defined
-#define IBUS_FRAME_H  // Define IBUS_FRAME_H to avoid multiple inclusions
+#ifndef IBUS_FRAME_H  
+#define IBUS_FRAME_H  
 
 
 #include <stdint.h>
@@ -23,6 +23,12 @@ typedef struct IBUS_FRAME
 
 
 void IBUS_init(struct IBUS_FRAME* frame);
+
+void IBUS_update_channels(IBUS_FRAME* frame , uint16_t channels_in[CHANNEL_AMOUNT]);
+
+void IBUS_get_frame(IBUS_FRAME* frame);
+
+void IBUS_get_crc(IBUS_FRAME* frame);
 
 
 
