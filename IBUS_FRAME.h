@@ -30,7 +30,17 @@ void IBUS_update_channels(IBUS_FRAME* frame , uint16_t channels_in[CHANNEL_AMOUN
 
 void IBUS_get_frame(IBUS_FRAME* frame);
 
+void IBUS_get_frame_to_send(IBUS_FRAME* frame);
+
 void IBUS_get_crc(IBUS_FRAME* frame);
+
+void IBUS_show_frame(IBUS_FRAME* frame);
+
+void IBUS_show_little_endian(IBUS_FRAME* frame);
+
+void IBUS_show_frame_to_send(IBUS_FRAME* frame);
+
+
 
 
 
