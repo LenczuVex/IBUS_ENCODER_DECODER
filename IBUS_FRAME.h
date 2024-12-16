@@ -10,14 +10,16 @@
 #define CHANNEL_AMOUNT 14
 #define CRC_SIZE 2 
 #define FULL_FRAME_SIZE 32
+#define SEND_FRAME_SIZE 64
 
 typedef struct IBUS_FRAME
 {
     uint8_t header[HEADER_SIZE];
     uint16_t channels[CHANNEL_AMOUNT];
-    uint8_t channels_little_indian[CHANNEL_AMOUNT*2];
+    uint8_t channels_little_endian[CHANNEL_AMOUNT*2];
     uint8_t crc_check[CRC_SIZE];
     uint8_t full_frame[FULL_FRAME_SIZE];
+    uint8_t frame_to_send[SEND_FRAME_SIZE];
 }IBUS_FRAME;
 
 

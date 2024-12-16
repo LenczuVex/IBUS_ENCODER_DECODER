@@ -12,8 +12,8 @@ void IBUS_init( IBUS_FRAME* frame)
     for(int i = 0; i < CHANNEL_AMOUNT ; i++)
     {
         frame->channels[i] = 0;
-        frame->channels_little_indian[2 * i] = 0 ;
-        frame->channels_little_indian[2 * i + 1] = 0 ;
+        frame->channels_little_endian[2 * i] = 0 ;
+        frame->channels_little_endian[2 * i + 1] = 0 ;
 
         frame->full_frame[2*i + 2] = 0 ;
         frame->full_frame[2*i + 3] = 0 ;
@@ -24,6 +24,11 @@ void IBUS_init( IBUS_FRAME* frame)
     frame->full_frame[FULL_FRAME_SIZE-2] = 0 ;
     frame->full_frame[FULL_FRAME_SIZE-1] = 0 ;
 
+    for(int i = 0 ; i < SEND_FRAME_SIZE ; i++)
+    {
+        frame->frame_to_send[i] = 0 ;
+    }
+
     
 }
 
@@ -32,16 +37,16 @@ void IBUS_update_channels(IBUS_FRAME* frame , uint16_t channels_in[CHANNEL_AMOUN
 
     for(int i = 0; i < CHANNEL_AMOUNT ; i++)
     {
-        uint8_t lowerByte;
-        uint8_t higherByte;
+        uint8_t LSB ;
+        uint8_t HSB ;
 
         frame->channels[i] = channels_in[i];
 
-        lowerByte = channels_in[i] & 0xFF ;
-        higherByte = (channels_in[i] >> 8) & 0xFF ;
+        LSB = channels_in[i] & 0xFF ;
+        HSB = (channels_in[i] >> 8) & 0xFF ;
 
-        frame->channels_little_indian[2*i] = lowerByte;
-        frame->channels_little_indian[2*i + 1] = higherByte ;
+        frame->channels_little_endian[2*i] = LSB;
+        frame->channels_little_endian[2*i + 1] = HSB ;
 
     }
     
@@ -73,18 +78,18 @@ void IBUS_get_crc(IBUS_FRAME* frame)
 }
 
 
-void IBUS_get_frame(IBUS_FRAME* frame)
+void IBUS_get_frame_values(IBUS_FRAME* frame)
 {
     for(int i = 0; i <CHANNEL_AMOUNT ;i++)
     {
-        //little indian 
+        //little endian 
 
-        frame->full_frame[2*i + 2] = frame->channels_little_indian[i];
-        frame->full_frame[2*i + 3] = frame->channels_little_indian[i+1];
+        frame->full_frame[2*i + 2] = frame->channels_little_endian[2*i];
+        frame->full_frame[2*i + 3] = frame->channels_little_endian[2*i + 1];
         //printf("first position %d\n",(2*i + 2));
-        //printf("value of little indian channel %u\n" , frame->channels_little_indian[i]);
+        //printf("value of little endian channel %u\n" , frame->channels_little_endian[i]);
         //printf("first position %d\n",(2*i + 3));
-        //printf("value of little indian channel %u\n" , frame->channels_little_indian[i+1]);
+        //printf("value of little endian channel %u\n" , frame->channels_little_endian[i+1]);
         
         
         //printf("%d\n",i);
@@ -95,20 +100,48 @@ void IBUS_get_frame(IBUS_FRAME* frame)
     IBUS_get_crc(frame);
 }
 
+void IBUS_get_frame_to_send(IBUS_FRAME* frame)
+{
+    IBUS_get_frame_values(frame);
+
+    for(int i = 0 ; i < FULL_FRAME_SIZE ; i++)
+    {
+        frame->frame_to_send[2*i] = frame->full_frame[i];
+        frame->frame_to_send[2*i + 1] ='\r';
+    }
+    
+
+}
+
 void IBUS_show_frame(IBUS_FRAME* frame)
 {
+    printf("Entire frame with values\n");
     for(int i = 0 ; i < FULL_FRAME_SIZE ; i++)
     {
         printf("%u,\n" , frame->full_frame[i]);
     }
+    printf("--------------------------\n");
 }
 
-void IBUS_show_little_indian(IBUS_FRAME* frame)
+void IBUS_show_little_endian(IBUS_FRAME* frame)
 {
+    printf("channels in little endian\n");
     for(int i = 2 ; i < FULL_FRAME_SIZE-2 ; i++)
     {
-        printf("%u,\n" , frame->channels_little_indian[i]);
+        printf("%u,\n" , frame->channels_little_endian[i]);
     }
+    printf("--------------------------\n");
+}
+
+void IBUS_show_frame_to_send(IBUS_FRAME* frame)
+{
+    printf("Frame to send\n");
+
+    for(int i = 0 ; i < SEND_FRAME_SIZE ; i++)
+    {
+        printf("%u,\n" , frame->frame_to_send[i]);
+    }
+    printf("--------------------------\n");
 }
 
 
@@ -127,9 +160,12 @@ int main()
         IBUS_update_channels(&ibus_frame , channels_of_perfect_frame);
 
         //printf("%d \n",ibus_frame.channels[0]);
+        //IBUS_show_frame(&ibus_frame);
+        IBUS_get_frame_to_send(&ibus_frame);
+        
         IBUS_show_frame(&ibus_frame);
-        IBUS_get_frame(&ibus_frame);
-        IBUS_show_little_indian(&ibus_frame);
+
+        IBUS_show_frame_to_send(&ibus_frame);
 
         
 
