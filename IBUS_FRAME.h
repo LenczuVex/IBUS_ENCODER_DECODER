@@ -31,7 +31,7 @@ void IBUS_init(struct IBUS_FRAME* frame);
 
 void IBUS_update_channels(IBUS_FRAME* frame , uint16_t channels_in[CHANNEL_AMOUNT]);
 
-void IBUS_get_frame(IBUS_FRAME* frame);
+void IBUS_get_frame_values(IBUS_FRAME* frame);
 
 void IBUS_get_frame_to_send(IBUS_FRAME* frame);
 
