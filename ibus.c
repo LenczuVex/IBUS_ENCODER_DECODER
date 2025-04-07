@@ -143,32 +143,3 @@ void IBUS_show_frame_to_send(IBUS_FRAME* frame)
     }
     printf("--------------------------\n");
 }
-
-
-
-int main()
-{
-        IBUS_FRAME ibus_frame;
-
-        IBUS_init(&ibus_frame);
-
-        uint8_t perfect_frame_encoded[32] = {32, 64, 220, 5, 220, 5, 199, 7, 217, 5, 208, 7, 232, 3, 208, 7, 208, 7, 208, 7, 208, 7, 220, 5, 220, 5, 220, 5, 220, 5, 143, 243};
-
-        uint16_t channels_of_perfect_frame[] = {1500, 1500, 1991, 1497, 2000, 1000, 2000, 2000, 2000, 2000, 1500, 1500, 1500, 1500};
-
-        
-        IBUS_update_channels(&ibus_frame , channels_of_perfect_frame);
-
-        //printf("%d \n",ibus_frame.channels[0]);
-        //IBUS_show_frame(&ibus_frame);
-        IBUS_get_frame_to_send(&ibus_frame);
-        
-        IBUS_show_frame(&ibus_frame);
-
-        IBUS_show_frame_to_send(&ibus_frame);
-
-        
-
-    
-    
-}
