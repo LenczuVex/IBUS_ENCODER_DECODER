@@ -45,6 +45,9 @@ void IBUS_show_frame_to_send(IBUS_FRAME* frame);
 
 
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif
